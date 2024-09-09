@@ -2,32 +2,17 @@ import { useState } from "react";
 import { Button } from "@mui/material";
 import { MdDashboard, MdOutlineKeyboardArrowRight, MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { FaProductHunt, FaUser } from "react-icons/fa";
-import { Link, useLocation } from "react-router-dom"; // Import useLocation for getting the current path
+import { Link, useLocation, useNavigate } from "react-router-dom"; // Import useLocation for getting the current path
 
 const menuData = [
-    {
-        title: "Dashboard",
-        icon: "MdDashboard",
-        subMenu: [] // No sub-menu for Dashboard
-    },
-    {
-        title: "Products",
-        icon: "FaProductHunt",
-        subMenu: [
-            { title: "Sub-menu A", path: "/products/a" },
-            { title: "Sub-menu B", path: "/products/b" },
-            { title: "Sub-menu C", path: "/products/c" }
-        ]
-    },
     {
         title: "Users",
         icon: "FaUser",
         subMenu: [
-            { title: "Sub-menu A", path: "/users/a" },
-            { title: "Sub-menu B", path: "/users/b" },
-            { title: "Sub-menu C", path: "/users/c" }
+            { title: "All Users", path: "/Users" },
+            { title: "Repeter", path: "/repeter" },
         ]
-    }
+    },
 ];
 
 const Sidebar = () => {
@@ -52,10 +37,23 @@ const Sidebar = () => {
     // Check if a sub-menu item is active based on the current route
     const isActive = (path) => location.pathname === path;
 
+    const navigate = useNavigate();
+    const handleNavigation = (menu) => {
+        navigate('/');
+        setOpenMenu(openMenu === menu ? null : menu);
+    };
+
     return (
         <>
             <div className="sidebar">
                 <ul>
+                    <li>
+                        <Button onClick={handleNavigation}>
+                            <span className="icon"><MdDashboard /></span>
+                            Dashboard
+                            <span className="arrow"><MdOutlineKeyboardArrowDown /></span>
+                        </Button>
+                    </li>
                     {menuData.map((menu, index) => (
                         <li
                             key={index}
