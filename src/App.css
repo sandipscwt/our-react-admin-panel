@@ -356,3 +356,9 @@ body{
   color: var(--color-black);
   margin: 0;
 }
+.login_form_bg{
+  background-color: var(--color-orange);
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+}
