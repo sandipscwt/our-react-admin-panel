@@ -161,10 +161,17 @@ body{
   min-height: 100vh;
   padding-top: 70px;
 }
+.main.withoutLoginMain{
+  padding: 0;
+}
 .main .contentWrapper{
   width: 80%;
   transition: all 0.5s ease-in-out;
   padding: 20px 20px;
+}
+.main .contentWrapper.withoutLogin{
+  width: 100%;
+  padding: 0;
 }
 .main .sidebarWrapper{
   width: 20%;

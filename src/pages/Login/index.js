@@ -1,16 +1,24 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';  // Use useNavigate in the Login component
-import { TextField, Button, Container, Typography, Box } from '@mui/material';  // Import Material-UI components
+import { useNavigate } from 'react-router-dom';
+import { TextField, Button, Container, Typography, Box, Alert } from '@mui/material';  // Import Material-UI components
 
 function Login({ onLogin }) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const navigate = useNavigate();  // Declare navigate within the Login component
+  const [email, setEmail] = useState('admin@example.com');
+  const [password, setPassword] = useState('password');
+  const [error, setError] = useState('');  // State for error messages
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onLogin();  // Call the login handler passed as prop
-    navigate('/');  // Navigate to dashboard after login
+    setError('');  // Reset error message
+
+    // Example validation (replace with your actual login logic)
+    if (email === 'admin@example.com' && password === 'password') {
+      onLogin();  // Call the login handler passed as prop
+      navigate('/');  // Navigate to dashboard after login
+    } else {
+      setError('Invalid email or password');  // Set error message
+    }
   };
 
   return (
@@ -21,7 +29,7 @@ function Login({ onLogin }) {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          minHeight: '100vh',  // Full viewport height
+          minHeight: '100vh',
           p: 3,
         }}
       >
@@ -31,8 +39,9 @@ function Login({ onLogin }) {
             component="form"
             noValidate
             onSubmit={handleSubmit}
-            sx={{ mt: 1, width: '100%' }}  // Ensure form takes full width within container
+            sx={{ mt: 1, width: '100%' }}
           >
+            {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}  {/* Error message display */}
             <TextField
               margin="normal"
               required

@@ -9,14 +9,11 @@ import Sidebar from "./components/Sidebar";
 import Users from './pages/Users';
 import Repeter from './pages/Repeter';
 import Login from './pages/Login';
-import { login, logout } from './store/authSlice';  // Import login/logout actions
+import { login } from './store/authSlice';  // Import login action
 
 function App() {
-
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated); // Access login state from Redux
   const dispatch = useDispatch();  // Access dispatch to trigger actions
@@ -27,34 +24,35 @@ function App() {
   };
 
   // Protected route component
-  const ProtectedRoute = ({ element }) => {
-    return isAuthenticated ? element : <Navigate to="/login" replace />;
+  const ProtectedRoute = ({ children }) => {
+    return isAuthenticated ? children : <Navigate to="/login" replace />;
   };
 
   return (
     <BrowserRouter>
-      {isAuthenticated && (
-        <>
-          <Header toggleSidebar={toggleSidebar} />
-          <div className={`main ${isSidebarOpen ? 'main-open' : 'main-closed'}`}>
+      <div className={`main ${isSidebarOpen ? 'main-open' : 'main-closed'} ${isAuthenticated ? 'withLoginMain' : 'withoutLoginMain'}`}>
+        {isAuthenticated && (
+          <>
+            <Header toggleSidebar={toggleSidebar} />
             <div className="sidebarWrapper">
               <Sidebar />
             </div>
-            <div className="contentWrapper">
-              <Routes>
-                <Route path="/" element={<ProtectedRoute element={<Dashboard />} />} />
-                <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} />} />
-                <Route path="/users" element={<ProtectedRoute element={<Users />} />} />
-                <Route path="/repeter" element={<ProtectedRoute element={<Repeter />} />} />
-              </Routes>
-            </div>
-          </div>
-        </>
-      )}
-      <Routes>
-        {/* If already authenticated, redirect from login to dashboard */}
-        <Route path="/login" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Login onLogin={handleLogin} />} />
-      </Routes>
+          </>
+        )}
+
+        <div className={`contentWrapper ${isAuthenticated ? 'withLogin' : 'withoutLogin'}`}>
+          <Routes>
+            {/* Public route for login */}
+            <Route path="/login" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Login onLogin={handleLogin} />} />
+
+            {/* Protected routes */}
+            <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            <Route path="/users" element={<ProtectedRoute><Users /></ProtectedRoute>} />
+            <Route path="/repeter" element={<ProtectedRoute><Repeter /></ProtectedRoute>} />
+          </Routes>
+        </div>
+      </div>
     </BrowserRouter>
   );
 }

@@ -1,26 +1,35 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-// Initial state
-const initialState = {
-  isAuthenticated: false,
-};
-
-// Create auth slice
 const authSlice = createSlice({
   name: 'auth',
-  initialState,
+  initialState: {
+    isAuthenticated: false,
+    user: null, // To store user information
+    error: null, // To store error messages
+  },
   reducers: {
-    login: (state) => {
+    login(state, action) {
       state.isAuthenticated = true;
+      state.user = action.payload; // Set user info upon login
+      state.error = null; // Clear any previous errors
     },
-    logout: (state) => {
+    logout(state) {
       state.isAuthenticated = false;
+      state.user = null; // Clear user info on logout
+    },
+    setError(state, action) {
+      state.error = action.payload; // Set error message
     },
   },
 });
 
-// Export actions for dispatching
-export const { login, logout } = authSlice.actions;
+// Export the actions
+export const { login, logout, setError } = authSlice.actions;
 
-// Export the reducer to add to the store
+// Selectors
+export const selectIsAuthenticated = (state) => state.auth.isAuthenticated;
+export const selectUser = (state) => state.auth.user;
+export const selectError = (state) => state.auth.error;
+
+// Export the reducer
 export default authSlice.reducer;
